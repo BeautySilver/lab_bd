@@ -9,10 +9,18 @@
 <h1>Редактирование пользователя</h1>
 <form action="/edit" method="POST">
     <input type="hidden" name="id" value="{{user.id}}" />
-    <label>Имя</label><br>
-    <input name="name" value="{{user.name}}"  class="field" /><br><br>
-    <label>Возраст</label><br>
-    <input name="age" type="number" min="1" max="110" value="{{user.age}}"  class="field" /><br><br>
+    <label>Number</label><br>
+    <input name="number" value="{{parking_car.number}}"  class="field" /><br><br>
+    <label>Make</label><br>
+    <input name="make"  value="{{parking_car.make}}"  class="field" /><br><br>
+    <label>Color</label><br>
+    <input name="color" value="{{parking_car.color}}"  class="field" /><br><br>
+    <label>Owner</label><br>
+    <input name="owner"  value="{{parking_car.owner}}"  class="field" /><br><br>
+    <label>Enter</label><br>
+    <input name="enter" type="datetime-local" value="{{parking_car.enter}}"  class="field" /><br><br>
+    <label>Exit</label><br>
+    <input name="exit_time" type="datetime-local"  value="{{parking_car.exit_time}}"  class="field" /><br><br>
     <input type="submit" value="Отправить" />
 </form>
 <a href="/">К списку пользователей</a>

@@ -1,20 +1,18 @@
-const express =require("express");
-const mysql =require("mysql2");
+const express = require("express");
+const mysql = require("mysql2");
 const bodyParser = require("body-parser");
-
 const app = express();
 const urlencodedParser = bodyParser.urlencoded({extended: false});
-
 const pool = mysql.createPool({
     connectionLimit: 5,
     host: "localhost",
     user: "root",
-    database: "users",
+    database: "labdb",
     password: "S233kaas17102001"
 });
 // получение списка пользователей
 app.get("/", function(req, res){
-    pool.query("SELECT * FROM user", function(err, data) {
+    pool.query("SELECT * FROM parking_car", function(err, data) {
         if(err) return console.log(err);
         res.render("index.hbs", {
             users: data
@@ -29,18 +27,26 @@ app.get("/create", function(req, res){
 app.post("/create", urlencodedParser, function (req, res) {
 
     if(!req.body) return res.sendStatus(400);
-    const name = req.body.name;
-    const age = req.body.age;
-    pool.query("INSERT INTO user (name, age) VALUES (?,?)", [name, age], function(err, data) {
+    const number = req.body.number;
+    const make = req.body.make;
+    const color = req.body.color;
+    const owner = req.body.owner;
+    const enter = req.body.enter;
+    const exit_time = req.body.exit_time;
+
+
+    pool.query("INSERT INTO parking_car (number, make, color, owner, enter, exit_time) VALUES (?,?,?,?,CURRENT_TIMESTAMP,?)", [number, make, color, owner, exit_time], function(err, data) {
         if(err) return console.log(err);
         res.redirect("/");
+
     });
 });
 
 // получем id редактируемого пользователя, получаем его из бд и отправлям с формой редактирования
 app.get("/edit/:id", function(req, res){
     const id = req.params.id;
-    pool.query("SELECT * FROM user WHERE id=?", [id], function(err, data) {
+    console.log(id);
+    pool.query("SELECT * FROM parking_car WHERE id=?", [id], function(err, data) {
         if(err) return console.log(err);
         res.render("edit.hbs", {
             user: data[0]
@@ -51,11 +57,16 @@ app.get("/edit/:id", function(req, res){
 app.post("/edit", urlencodedParser, function (req, res) {
 
     if(!req.body) return res.sendStatus(400);
-    const name = req.body.name;
-    const age = req.body.age;
+    const number = req.body.number;
+    const make = req.body.make;
+    const color = req.body.color;
+    const owner = req.body.owner;
+    const enter = req.body.enter;
+    const exit_time = req.body.exit_time;
     const id = req.body.id;
 
-    pool.query("UPDATE user SET name=?, age=? WHERE id=?", [name, age, id], function(err, data) {
+
+    pool.query("UPDATE parking_car SET number=?, make=?, color=?, owner=?, enter=?, exit_time=?  WHERE id=?", [number, make,color,owner,enter,exit_time, id], function(err, data) {
         if(err) return console.log(err);
         res.redirect("/");
     });
@@ -65,12 +76,18 @@ app.post("/edit", urlencodedParser, function (req, res) {
 app.post("/delete/:id", function(req, res){
 
     const id = req.params.id;
-    pool.query("DELETE FROM user WHERE id=?", [id], function(err, data) {
+    pool.query("DELETE FROM parking_car WHERE id=?", [id], function(err, data) {
         if(err) return console.log(err);
         res.redirect("/");
     });
 });
-
-app.listen(3000, function(){
+/*app.post("/sort/:column_name", function(req,res){
+const column_name=;
+pool.query("SELECT * FROM parking_car ORDER BY ?", [column_name], function (err, data){
+    if (err) return console.log(err);
+    res.redirect("/")
+});
+});*/
+    app.listen(3000, function(){
     console.log("Сервер ожидает подключения...");
 });
